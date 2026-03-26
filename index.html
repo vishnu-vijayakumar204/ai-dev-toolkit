@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Dev Toolkit — Team Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f3ef;--surface:#fff;--card:#fafaf8;--border:#e3e1d9;
+  --ink:#18181b;--muted:#8a8880;--dim:#555;
+  --green:#1a7a3a;--green-bg:#eaf5ef;--green-border:#b8ddb8;
+  --red:#b03030;--red-bg:#fdf2f2;--red-border:#f0b8b8;
+  --blue:#1a4faa;--blue-bg:#eef3fc;--blue-border:#b8cbf0;
+  --orange:#b05010;--orange-bg:#fdf4ee;--orange-border:#f0cba8;
+  --purple:#7020b0;--purple-bg:#f4eefb;--purple-border:#cfb0f0;
+  --yellow:#d4a000;--yellow-bg:#fffbea;--yellow-border:#f5d97a;
+  --accent:#d4572a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+nav{background:var(--ink);display:flex;align-items:stretch;position:sticky;top:0;z-index:60;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.brand{font-family:'DM Mono',monospace;font-size:12px;color:#fff;padding:0 24px;display:flex;align-items:center;border-right:1px solid #333;white-space:nowrap;flex-shrink:0}
+.brand em{color:#ffd166;font-style:normal}
+.nav-tab{padding:14px 18px;font-size:12px;font-weight:600;color:#666;cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;border-bottom:2px solid transparent;transition:all .15s}
+.nav-tab:hover{color:#ccc}
+.nav-tab.active{color:#fff;border-bottom-color:#ffd166}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* HERO */
+.hero{background:var(--ink);padding:56px 32px 48px}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:#ffd166;letter-spacing:.15em;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(28px,4.5vw,52px);font-weight:700;color:#fff;line-height:1.08;letter-spacing:-.02em}
+.hero h1 em{color:#ffd166;font-style:normal}
+.hero-sub{margin-top:10px;color:#666;font-size:14px;line-height:1.65;max-width:520px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.hero-pill{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:4px;border:1px solid #333;color:#888;letter-spacing:.05em}
+.stat-col{display:flex;flex-direction:column;gap:16px;text-align:right}
+.stat-n{font-family:'DM Mono',monospace;font-size:36px;color:#ffd166;line-height:1}
+.stat-l{font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+
+/* FILTER BAR */
+.filterbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;position:sticky;top:45px;z-index:50}
+.pill{padding:5px 14px;border-radius:100px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.pill:hover{border-color:var(--ink);color:var(--ink)}
+.pill.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search-wrap{margin-left:auto;position:relative}
+.search-wrap input{font-family:'DM Mono',monospace;font-size:12px;padding:6px 12px 6px 28px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--ink);outline:none;width:190px;transition:border .15s}
+.search-wrap input:focus{border-color:#1a4faa}
+.search-wrap input::placeholder{color:var(--muted)}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+
+/* WRAP */
+.w{max-width:1100px;margin:0 auto;padding:40px 32px}
+
+/* SECTION */
+.sh{margin-bottom:28px}
+.sh .title{font-size:20px;font-weight:700;letter-spacing:-.02em}
+.sh .sub{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* GRID TIPS */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.tip{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px;transition:border-color .15s,transform .15s}
+.tip:hover{border-color:#bbb;transform:translateY(-1px)}
+.tip.hidden{display:none}
+.tip-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+.tip-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:3px}
+.tip-title{font-size:14px;font-weight:600;line-height:1.35}
+.badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;padding:3px 8px;border-radius:4px;white-space:nowrap;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+.b-cursor{background:#e8f5e8;color:#2a6b2a}
+.b-claude{background:#eef3fc;color:#1a4a9a}
+.b-api{background:#fdf4ee;color:#9a4a1a}
+.b-prompt{background:#f4eefb;color:#6a1a9a}
+.tip-body{font-size:13px;color:var(--dim);line-height:1.65}
+.tip-body strong{color:var(--ink)}
+.chip{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;background:var(--bg);border:1px solid var(--border);padding:1px 5px;border-radius:4px;color:var(--accent)}
+.imp{display:flex;align-items:center;gap:6px;margin-top:12px}
+.imp-l{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.dots{display:flex;gap:3px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
+.dot.h{background:var(--accent)}
+.dot.m{background:#1a4faa}
+.divider{height:1px;background:var(--border);margin:36px 0}
+
+/* COLORED CALLOUT */
+.callout{border-radius:10px;padding:16px 20px;font-size:13px;line-height:1.65;margin-bottom:20px}
+.callout.yellow{background:var(--yellow-bg);border:1.5px solid var(--yellow-border);color:#554400}
+.callout.red{background:var(--red-bg);border:1.5px solid var(--red-border);color:#662020}
+.callout.green{background:var(--green-bg);border:1.5px solid var(--green-border);color:#1a4a2a}
+.callout.blue{background:var(--blue-bg);border:1.5px solid var(--blue-border);color:#0a2a6a}
+.callout strong{color:inherit;font-weight:700}
+
+/* REQUEST BUDGET */
+.budget-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.budget-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px}
+.budget-icon{font-size:24px;margin-bottom:10px}
+.budget-type{font-size:14px;font-weight:700;margin-bottom:4px}
+.budget-num{font-family:'DM Mono',monospace;font-size:26px;color:var(--accent);font-weight:500;line-height:1}
+.budget-label{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+.budget-card.red{border-color:var(--red-border);background:var(--red-bg)}
+.budget-card.red .budget-num{color:var(--red)}
+.budget-card.green{border-color:var(--green-border);background:var(--green-bg)}
+.budget-card.green .budget-num{color:var(--green)}
+.budget-card.blue{border-color:var(--blue-border);background:var(--blue-bg)}
+.budget-card.blue .budget-num{color:var(--blue)}
+
+/* PROGRESS BAR */
+.pbar-wrap{margin-bottom:12px}
+.pbar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;font-family:'DM Mono',monospace}
+.pbar{height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:4px}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border:1.5px solid var(--border);border-radius:12px;background:var(--surface)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:var(--ink)}
+thead th{padding:13px 16px;text-align:left;color:#aaa;font-size:10px;font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--bg)}
+td{padding:13px 16px;vertical-align:top;line-height:1.5}
+.mn{font-family:'DM Mono',monospace;font-weight:500;font-size:12px}
+.mp{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
+.utag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:4px;background:var(--bg);border:1px solid var(--border);margin:2px 2px 0 0;white-space:nowrap;color:#444}
+.cbadge{font-family:'DM Mono',monospace;font-size:11px;padding:3px 8px;border-radius:6px;font-weight:500;white-space:nowrap}
+.clow{background:var(--green-bg);color:var(--green)}
+.cmid{background:var(--orange-bg);color:var(--orange)}
+.chigh{background:var(--red-bg);color:var(--red)}
+.req-num{font-family:'DM Mono',monospace;font-weight:600;font-size:14px}
+.req-high{color:var(--red)}
+.req-mid{color:var(--orange)}
+.req-low{color:var(--green)}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* SURFACE CARD */
+.surface-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:22px;transition:border-color .15s}
+.surface-card:hover{border-color:#bbb}
+.sc-icon{font-size:28px;margin-bottom:10px}
+.sc-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.sc-sub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em}
+.sc-body{font-size:13px;color:var(--dim);line-height:1.65}
+.sc-body strong{color:var(--ink)}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:11px;padding:3px 9px;border-radius:100px;border:1px solid var(--border);color:var(--dim);background:var(--bg)}
+.tag.green{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.tag.red{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+.tag.blue{background:var(--blue-bg);border-color:var(--blue-border);color:var(--blue)}
+
+/* VS GRID */
+.vs-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+.vs-col{padding:24px}
+.vs-col.cursor-col{background:#f8fdf8}
+.vs-col.cc-col{background:#eef3fc}
+.vs-divider-col{display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;writing-mode:vertical-rl;padding:20px 12px;letter-spacing:.1em}
+.vs-head{font-size:15px;font-weight:700;margin-bottom:4px}
+.vs-sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+.vs-row{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.vs-row .vs-col{border-top:1px solid var(--border)}
+
+.vs-item{margin-bottom:10px}
+.vs-item-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.vs-item-val{font-size:13px;color:var(--dim);line-height:1.55}
+.vs-item-val strong{color:var(--ink)}
+.vs-item-val .better{display:inline-block;font-size:10px;background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);padding:1px 6px;border-radius:4px;margin-left:4px;font-family:'DM Mono',monospace}
+.vs-item-val .worse{display:inline-block;font-size:10px;background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);padding:1px 6px;border-radius:4px;margin-left:4px;font-family:'DM Mono',monospace}
+.vs-item-val .same{display:inline-block;font-size:10px;background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-border);padding:1px 6px;border-radius:4px;margin-left:4px;font-family:'DM Mono',monospace}
+
+/* AGENT CARD */
+.agent-card{background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:22px;transition:border-color .15s}
+.agent-card:hover{border-color:#aaa}
+.ac-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.ac-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ac-icon.blue{background:var(--blue-bg)}
+.ac-icon.purple{background:var(--purple-bg)}
+.ac-icon.green{background:var(--green-bg)}
+.ac-icon.orange{background:var(--orange-bg)}
+.ac-title{font-size:15px;font-weight:700}
+.ac-meta{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em}
+.ac-body{font-size:13px;color:var(--dim);line-height:1.65}
+.ac-body strong{color:var(--ink)}
+.ac-example{margin-top:12px;background:var(--bg);border-radius:8px;padding:12px 14px;font-family:'DM Mono',monospace;font-size:11px;color:#555;line-height:1.7;border-left:3px solid var(--border)}
+.ac-example .label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+
+/* FLOW */
+.flow{display:flex;align-items:stretch;gap:0;border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+.flow-step{flex:1;padding:18px 16px;background:var(--surface);border-right:1px solid var(--border)}
+.flow-step:last-child{border-right:none}
+.flow-step-n{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:6px}
+.flow-step-t{font-size:13px;font-weight:600;margin-bottom:4px}
+.flow-step-b{font-size:12px;color:var(--dim);line-height:1.5}
+.flow-arrow{display:flex;align-items:center;padding:0 4px;color:var(--muted);font-size:18px;background:var(--bg);border-right:1px solid var(--border)}
+
+/* EMPTY */
+.empty{padding:60px;text-align:center;color:var(--muted);font-size:13px;display:none;grid-column:1/-1}
+.empty.show{display:block}
+
+/* FOOTER */
+footer{background:var(--ink);padding:18px 32px;display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:10px;color:#555;flex-wrap:wrap;gap:8px}
+footer em{color:#ffd166;font-style:normal}
+
+@media(max-width:720px){
+  .hero-inner,.two-col,.vs-grid{grid-template-columns:1fr}
+  .vs-divider-col{writing-mode:horizontal-tb;padding:10px}
+  .w,.filterbar,nav{padding-left:16px;padding-right:16px}
+  .flow{flex-direction:column}
+  .flow-step{border-right:none;border-bottom:1px solid var(--border)}
+  .flow-arrow{display:none}
+  .stat-col{text-align:left;flex-direction:row;gap:24px}
+  .search-wrap{margin-left:0;width:100%}
+  .search-wrap input{width:100%}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">AI Dev <em>Toolkit</em></div>
+  <button class="nav-tab active" onclick="go('tips',this)">Tips & Requests</button>
+  <button class="nav-tab" onclick="go('models',this)">Model Guide</button>
+  <button class="nav-tab" onclick="go('maxmode',this)">Max Mode</button>
+  <button class="nav-tab" onclick="go('vscc',this)">Cursor vs Claude Code</button>
+  <button class="nav-tab" onclick="go('surfaces',this)">Claude Surfaces</button>
+  <button class="nav-tab" onclick="go('agents',this)">Subagents & Skills</button>
+</nav>
+
+<!-- ══════════════ TIPS & REQUESTS ══════════════ -->
+<div class="page active" id="page-tips">
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">// Enterprise Guide · March 2026</div>
+      <h1>Token Optimisation &<br><em>Request Budget</em> Guide</h1>
+      <p class="hero-sub">Verified tips for Cursor, Claude.ai, API, and prompting — built for teams on the 500-request enterprise plan.</p>
+      <div class="hero-pills">
+        <div class="hero-pill">500 requests/month</div>
+        <div class="hero-pill">Normal = 1 req/msg</div>
+        <div class="hero-pill">Thinking = 2 req/msg</div>
+        <div class="hero-pill">Max Mode = context-based</div>
+      </div>
+    </div>
+    <div class="stat-col">
+      <div><div class="stat-n">32</div><div class="stat-l">Tips</div></div>
+      <div><div class="stat-n">6</div><div class="stat-l">Sections</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="filterbar">
+  <button class="pill active" data-f="all">All</button>
+  <button class="pill" data-f="cursor">Cursor</button>
+  <button class="pill" data-f="claude">Claude.ai</button>
+  <button class="pill" data-f="api">API</button>
+  <button class="pill" data-f="prompt">Prompting</button>
+  <div class="search-wrap"><span class="si">⌕</span><input id="search" type="text" placeholder="search tips..."></div>
+</div>
+
+<div class="w">
+  <div class="callout yellow" style="margin-bottom:28px">
+    <strong>Your Enterprise Request Budget:</strong> 500 requests/month per seat. Normal models (Sonnet, GPT-4.1, Gemini) cost <strong>1 request per message</strong>. Thinking models (o3, Gemini 2.5 Pro with reasoning) cost <strong>2 requests per message</strong>. Max Mode is variable — billed on context tokens consumed, not a flat rate. Auto mode uses smarter routing and preserves your budget best.
+  </div>
+
+  <!-- REQUEST MATH -->
+  <div class="sh"><div class="title">Your 500 Request Budget — Real Math</div><div class="sub">What 500 requests actually buys you depending on how you work</div></div>
+
+  <div class="budget-grid" style="margin-bottom:8px">
+    <div class="budget-card green">
+      <div class="budget-icon">⚡</div>
+      <div class="budget-type">Normal Model</div>
+      <div class="budget-num">500</div>
+      <div class="budget-label">messages/month<br>1 request per message<br><em>Sonnet, GPT-4.1, Gemini Flash</em></div>
+    </div>
+    <div class="budget-card red">
+      <div class="budget-icon">🧠</div>
+      <div class="budget-type">Thinking Model</div>
+      <div class="budget-num">250</div>
+      <div class="budget-label">messages/month<br>2 requests per message<br><em>o3, Gemini 2.5 Pro (reasoning mode)</em></div>
+    </div>
+    <div class="budget-card blue">
+      <div class="budget-icon">📐</div>
+      <div class="budget-type">Mixed workflow</div>
+      <div class="budget-num">~380</div>
+      <div class="budget-label">messages/month<br>Thinking for planning only,<br>normal for execution</div>
+    </div>
+    <div class="budget-card" style="border-color:#f0cba8;background:#fdf4ee">
+      <div class="budget-icon">⚠️</div>
+      <div class="budget-type">Max Mode</div>
+      <div class="budget-num" style="color:#b05010">Variable</div>
+      <div class="budget-label">Context-based billing<br>Large contexts drain fast<br><em>Use surgically</em></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:32px">
+    <div style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em">Daily budget if you work 22 days/month</div>
+    <div class="pbar-wrap"><div class="pbar-label"><span>Normal model (1 req/msg)</span><span style="color:var(--green)">~22 messages/day</span></div><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--green)"></div></div></div>
+    <div class="pbar-wrap"><div class="pbar-label"><span>Thinking model (2 req/msg)</span><span style="color:var(--orange)">~11 messages/day</span></div><div class="pbar"><div class="pbar-fill" style="width:50%;background:var(--orange)"></div></div></div>
+    <div class="pbar-wrap"><div class="pbar-label"><span>Mixing (smart workflow)</span><span style="color:var(--blue)">~17 messages/day</span></div><div class="pbar"><div class="pbar-fill" style="width:77%;background:var(--blue)"></div></div></div>
+  </div>
+
+  <div class="callout red" style="margin-bottom:32px">
+    <strong>The thinking model trap:</strong> Using o3 or Gemini 2.5 Pro (thinking mode) for every message burns through 500 requests in 11 working days. <strong>Reserve thinking models for planning, hard bugs, and architecture decisions only.</strong> Use Sonnet for the 80% of execution work that follows.
+  </div>
+
+  <!-- TIPS GRID -->
+  <div class="sh"><div class="title">Optimisation Tips</div><div class="sub">Verified across Cursor, Claude.ai, API, and prompting</div></div>
+  <div class="tips-grid" id="tgrid">
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#01</div><div class="tip-title">Use .cursorrules — load context once, not every message</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Put your stack, conventions, and constraints in <span class="chip">.cursorrules</span>. Every chat inherits it free. <strong>No extra requests. No pasting.</strong> This is the highest-leverage setup step in Cursor — one-time cost, unlimited benefit.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#02</div><div class="tip-title">Stay on Auto mode to avoid burning requests on premium models</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Auto mode routes to the right model efficiently. <strong>Manually picking Opus/o3 for every message burns your 500-request budget fast.</strong> Save manual selection for tasks that genuinely need it — complex architecture, hard bugs.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#03</div><div class="tip-title">Only @-mention files directly relevant to the task</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Every <span class="chip">@file</span> goes fully into context. Attaching 10 files when you need 2 wastes context depth — and longer contexts can cost more per request in Max Mode. <strong>The model can't ignore what you send.</strong></div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#04</div><div class="tip-title">Use Notepads for reusable context blocks</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Store DB schema, API contracts, component patterns as Notepads. Attach via <span class="chip">@notepad</span> rather than pasting. Same content, one-time write. <strong>Especially valuable when 500 requests is your ceiling</strong> — every re-paste in a new chat is wasted overhead.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#05</div><div class="tip-title">New chat per task — don't chain unrelated work</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Long chained conversations accumulate stale context. <strong>Older tokens get compressed or dropped silently</strong> — the model may miss constraints from 30 messages back. New task = new chat. Keeps each message clean and effective.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#06</div><div class="tip-title">Use .cursorignore to clean up the codebase index</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Exclude <span class="chip">node_modules</span>, <span class="chip">dist</span>, lock files, generated code. Smaller index = faster, more accurate retrieval. Uses <span class="chip">.gitignore</span> syntax. A noisy index forces Cursor to read more irrelevant files per <span class="chip">@codebase</span> call.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#07</div><div class="tip-title">Composer for multi-file edits, Chat for questions — always</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body">Mixing them causes context bleed. A debugging session from earlier in the same chat can confuse the model on a new feature task. <strong>Right tool, right job.</strong> Composer is stateful for edits; Chat is for exploration and Q&A.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="cursor"><div class="tip-top"><div><div class="tip-num">#08</div><div class="tip-title">Use @codebase sparingly — direct @file is cheaper and more precise</div></div><span class="badge b-cursor">Cursor</span></div><div class="tip-body"><span class="chip">@codebase</span> triggers a semantic search over the index — not a full dump. Useful when you don't know the files. <strong>But when you know the files, direct <span class="chip">@file</span> references are faster, more focused, and better for preserving context depth.</strong></div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="claude"><div class="tip-top"><div><div class="tip-num">#09</div><div class="tip-title">Use Projects to persist context across sessions</div></div><span class="badge b-claude">Claude.ai</span></div><div class="tip-body">Set a system prompt and attach docs once per Project. Every chat in the project inherits it automatically. <strong>Stop re-explaining your stack every new conversation.</strong> On a 500-request plan, eliminating repeated setup context is essential.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="claude"><div class="tip-top"><div><div class="tip-num">#10</div><div class="tip-title">Use XML tags to structure complex prompts</div></div><span class="badge b-claude">Claude.ai</span></div><div class="tip-body">Claude is trained on XML-formatted prompts. Use <span class="chip">&lt;context&gt;</span>, <span class="chip">&lt;task&gt;</span>, <span class="chip">&lt;constraints&gt;</span>. Better structure = more focused output = fewer follow-up messages = fewer requests spent correcting.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="claude"><div class="tip-top"><div><div class="tip-num">#11</div><div class="tip-title">"Complete output, do not truncate" — say it every time</div></div><span class="badge b-claude">Claude.ai</span></div><div class="tip-body">Truncated output forces a follow-up message. That's <strong>an extra request burned</strong>. Add "Output the complete code, do not truncate" for any codegen task. You'll save more requests over a month than you'd expect.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="claude"><div class="tip-top"><div><div class="tip-num">#12</div><div class="tip-title">Summarise long threads before pivoting to a new sub-task</div></div><span class="badge b-claude">Claude.ai</span></div><div class="tip-body">Ask Claude: <strong>"Summarise the key decisions from this conversation."</strong> Start a new chat with that summary. Keeps context clean, prevents the model hallucinating from contradictions buried deep in a long thread. Cleaner context = fewer correction requests.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="api"><div class="tip-top"><div><div class="tip-num">#13</div><div class="tip-title">Use Prompt Caching — 90% cost reduction on repeated system prompts</div></div><span class="badge b-api">API</span></div><div class="tip-body">Set <span class="chip">cache_control: {type: "ephemeral"}</span> on any static system prompt block. Verified 90% cost reduction on cache hits. Directly relevant if you're building anything on top of the Anthropic API alongside Cursor.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="api"><div class="tip-top"><div><div class="tip-num">#14</div><div class="tip-title">Set max_tokens deliberately — never leave it uncapped</div></div><span class="badge b-api">API</span></div><div class="tip-body">For short-answer tasks, set max_tokens low (256). For codegen, set it high (4096+). Uncapped on a high-volume endpoint is how surprise bills happen. Tight max_tokens also prevents verbose padding that doesn't add value.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="api"><div class="tip-top"><div><div class="tip-num">#15</div><div class="tip-title">Batch API for non-realtime jobs — 50% cost reduction</div></div><span class="badge b-api">API</span></div><div class="tip-body">Batches API gives 50% off with 24hr SLA. Perfect for data enrichment, bulk classification, doc processing. <strong>Same models, same quality — just queued.</strong> If you're processing data in the background, this should be your default.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="api"><div class="tip-top"><div><div class="tip-num">#16</div><div class="tip-title">temperature=0 for code and structured output tasks</div></div><span class="badge b-api">API</span></div><div class="tip-body">Codegen, extraction, JSON output — <span class="chip">temperature: 0</span> makes results consistent and reproducible. Higher temperature wastes tokens exploring variation you don't need for deterministic tasks.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot m"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#17</div><div class="tip-title">Front-load constraints — state them before the task</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">"Oh also, it should use TypeScript" at the end of a long prompt wastes the entire previous response. <strong>State all constraints before the task.</strong> Claude reads the whole prompt before generating — constraints placed first carry maximum weight on output.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#18</div><div class="tip-title">One good example beats three paragraphs of description</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">Show one input→output pair in the exact format you want. Claude pattern-matches immediately. <strong>Prose descriptions use 3× more tokens and produce worse output.</strong> Show, don't tell — especially on a 500-request budget.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#19</div><div class="tip-title">Negative constraints cut output tokens by 30–50% on code tasks</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">Add <strong>"No explanation, just the code"</strong> or <strong>"No markdown, no preamble"</strong>. Eliminates verbose wrapping. <strong>Fewer output tokens = faster response + less context consumed</strong> — especially valuable on fixed request budgets.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#20</div><div class="tip-title">Decompose complex tasks — one focus per prompt</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">"Build a full auth system with OAuth, magic links, and RBAC" in one shot = mediocre output across all parts + likely a follow-up correction request. <strong>Sequential focused prompts produce better output AND you can steer between steps</strong> before the model goes off-piste.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#21</div><div class="tip-title">Edit the previous response — don't regenerate from scratch</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">If 80% of the output is correct, say: <strong>"Keep everything, change only [X]."</strong> Re-generating the whole thing burns a full request on work already approved. Targeted edits = faster, cheaper, easier to review. <strong>Critical on a 500-request plan.</strong></div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#22</div><div class="tip-title">Write a CLAUDE.md or AGENTS.md for portable cross-tool context</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">A <span class="chip">CLAUDE.md</span> at project root is read automatically by Claude Code at session start. An <span class="chip">AGENTS.md</span> works across Cursor, Claude Code, and Gemini CLI. <strong>One file, every tool, zero repeated pasting.</strong> Your whole team works from the same ground truth.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#23</div><div class="tip-title">Use thinking models only for planning — then hand off to Sonnet</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">Use o3 or Gemini 2.5 Pro thinking mode to produce a plan (write it to a Markdown file). Review it. Then switch to Sonnet for execution. <strong>Planning = thinking model (2 req/msg). Execution = normal model (1 req/msg).</strong> You get the intelligence without burning double-rate on every message.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot h"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#24</div><div class="tip-title">Paste only the relevant code section — not the full file</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">400-line file when the bug is in 30 lines = context waste. Add <span class="chip">// rest of file omitted</span> so the model understands the excerpt is intentional. <strong>Precise context produces better output and uses less of your context window budget</strong> — especially in Max Mode where context depth has a direct cost.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot h"></div><div class="dot m"></div></div></div></div>
+
+    <div class="tip" data-c="prompt"><div class="tip-top"><div><div class="tip-num">#25</div><div class="tip-title">When stuck, swap models instead of retrying the same one</div></div><span class="badge b-prompt">Prompting</span></div><div class="tip-body">If Claude hesitates, try GPT-4.1. If GPT spins, Claude cuts through. <strong>Different models have different failure modes.</strong> Switching provider on the same prompt — no other changes — frequently unblocks tasks with no extra prompt engineering needed.</div><div class="imp"><span class="imp-l">Impact</span><div class="dots"><div class="dot h"></div><div class="dot m"></div><div class="dot m"></div></div></div></div>
+
+  </div>
+  <div class="empty" id="tempty">No tips match. Try a different filter.</div>
+</div>
+</div>
+
+<!-- ══════════════ MODELS ══════════════ -->
+<div class="page" id="page-models">
+<div class="w">
+  <div class="sh"><div class="title">Model Selection Guide</div><div class="sub">Which model to use, when — and what it costs your 500-request enterprise budget</div></div>
+
+  <div class="tbl-wrap" style="margin-bottom:24px">
+    <table>
+      <thead><tr>
+        <th>Model</th><th>Best For</th><th>Avoid For</th><th>Speed</th>
+        <th>Req Cost</th><th>Est. msgs from 500 reqs</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><div class="mn">Claude Sonnet 4.6</div><div class="mp">Anthropic · Best daily driver</div></td>
+          <td><span class="utag">Day-to-day coding</span><span class="utag">Multi-file refactors</span><span class="utag">Frontend</span><span class="utag">Code review</span><span class="utag">API work</span></td>
+          <td style="font-size:12px;color:#888">Overkill for simple stubs or boilerplate — use a lighter model</td>
+          <td><span style="color:var(--green);font-size:12px">Fast</span></td>
+          <td><span class="cbadge cmid">1 req/msg</span></td>
+          <td><span class="req-num req-mid">500 msgs</span></td>
+        </tr>
+        <tr>
+          <td><div class="mn">Claude Opus 4.6</div><div class="mp">Anthropic · Heavy lifter</div></td>
+          <td><span class="utag">Complex architecture</span><span class="utag">Critical logic</span><span class="utag">Large repo reasoning</span><span class="utag">System design</span></td>
+          <td style="font-size:12px;color:#888">Anything routine. Deeper reasoning but same request cost as Sonnet in Cursor — use it only when reasoning depth matters</td>
+          <td><span style="color:var(--orange);font-size:12px">Slower</span></td>
+          <td><span class="cbadge cmid">1 req/msg</span></td>
+          <td><span class="req-num req-mid">500 msgs</span></td>
+        </tr>
+        <tr>
+          <td><div class="mn">GPT-4.1</div><div class="mp">OpenAI · All-rounder</div></td>
+          <td><span class="utag">Logic-heavy work</span><span class="utag">Refactoring</span><span class="utag">Design patterns</span><span class="utag">When Claude hesitates</span></td>
+          <td style="font-size:12px;color:#888">Can be "lazy" — may provide incomplete code on large generation tasks</td>
+          <td><span style="color:var(--green);font-size:12px">Fast</span></td>
+          <td><span class="cbadge cmid">1 req/msg</span></td>
+          <td><span class="req-num req-mid">500 msgs</span></td>
+        </tr>
+        <tr>
+          <td><div class="mn">o3 / o3-mini</div><div class="mp">OpenAI · Thinking model ⚠️</div></td>
+          <td><span class="utag">Hard debugging</span><span class="utag">Multi-step logic</span><span class="utag">Planning phase</span><span class="utag">Unfamiliar domains</span></td>
+          <td style="font-size:12px;color:#888;font-weight:600;color:#b03030">SLOW + 2 req/msg — reserve for genuinely hard problems only. Using for routine work halves your budget instantly.</td>
+          <td><span style="color:var(--red);font-size:12px">Slow (thinks)</span></td>
+          <td><span class="cbadge chigh">2 req/msg ⚠️</span></td>
+          <td><span class="req-num req-high">250 msgs</span></td>
+        </tr>
+        <tr>
+          <td><div class="mn">Gemini 2.5 Pro</div><div class="mp">Google · Thinking mode = 2× ⚠️</div></td>
+          <td><span class="utag">Massive codebase</span><span class="utag">Research tasks</span><span class="utag">1M+ token tasks</span></td>
+          <td style="font-size:12px;color:#888">In thinking mode = 2 req/msg. Reported instability in long dialogs. Don't rely on for critical interactive sessions.</td>
+          <td><span style="color:var(--orange);font-size:12px">Medium</span></td>
+          <td><span class="cbadge chigh">2 req/msg (thinking)</span></td>
+          <td><span class="req-num req-high">250 msgs</span></td>
+        </tr>
+        <tr>
+          <td><div class="mn">Gemini Flash / GPT-4o</div><div class="mp">Fast cheap utility models</div></td>
+          <td><span class="utag">Boilerplate</span><span class="utag">Stubs</span><span class="utag">Quick utilities</span><span class="utag">Simple autocomplete</span></td>
+          <td style="font-size:12px;color:#888">Not for complex architecture or deep reasoning</td>
+          <td><span style="color:var(--green);font-size:12px">Very fast</span></td>
+          <td><span class="cbadge clow">1 req/msg</span></td>
+          <td><span class="req-num req-low">500 msgs</span></td>
+        </tr>
+        <tr>
+          <td><div class="mn">Cursor Composer 2</div><div class="mp">Cursor-native · March 2026</div></td>
+          <td><span class="utag">Cursor-native coding tasks</span><span class="utag">Budget-conscious work</span><span class="utag">Tab completions</span></td>
+          <td style="font-size:12px;color:#888">Deep reasoning tasks — Composer 2 is optimised for coding benchmarks, not general reasoning</td>
+          <td><span style="color:var(--green);font-size:12px">Very fast</span></td>
+          <td><span class="cbadge clow">1 req/msg</span></td>
+          <td><span class="req-num req-low">500 msgs</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout yellow">
+    <strong>Verified note on Sonnet vs Opus request cost in Cursor Enterprise:</strong> On your enterprise plan, both Sonnet and Opus cost 1 request per message in normal mode. The difference is quality and speed, not request rate. Use Opus when you genuinely need deeper reasoning — not by default.
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sh"><div class="title">Thinking vs Non-Thinking Models</div><div class="sub">Two fundamentally different modes — critical for your 500-request budget</div></div>
+
+  <div class="two-col">
+    <div class="surface-card" style="border-color:var(--red-border);background:var(--red-bg)">
+      <div class="sc-sub" style="color:var(--red)">⚠️ Thinking Models — 2 req/msg</div>
+      <div class="sc-title">o3, Gemini 2.5 Pro (reasoning)</div>
+      <div class="sc-body" style="margin-top:10px">
+        Internally deliberate before answering — you can often see their reasoning chain. Better on complex multi-step logic, planning, hard debugging. <strong>But they cost 2 requests per message</strong>, halving your monthly budget. Use them for the 20% of hard work, then switch to Sonnet for execution.
+      </div>
+      <div class="tag-list"><span class="tag red">Hard debugging</span><span class="tag red">Architecture planning</span><span class="tag red">Unfamiliar domains</span><span class="tag red">Complex logic</span></div>
+    </div>
+    <div class="surface-card" style="border-color:var(--green-border);background:var(--green-bg)">
+      <div class="sc-sub" style="color:var(--green)">✓ Non-Thinking Models — 1 req/msg</div>
+      <div class="sc-title">Claude Sonnet, GPT-4.1, Opus</div>
+      <div class="sc-body" style="margin-top:10px">
+        Fast, direct output. Better for surgical edits, day-to-day coding, and execution tasks. More "obedient" — follows your instructions precisely. <strong>Full 500 messages per month.</strong> This should be your default for 80%+ of work.
+      </div>
+      <div class="tag-list"><span class="tag green">Day-to-day coding</span><span class="tag green">Refactoring</span><span class="tag green">Feature dev</span><span class="tag green">Execution</span></div>
+    </div>
+  </div>
+
+  <div class="callout blue" style="margin-top:16px">
+    💡 <strong>Best pattern:</strong> Use a thinking model to write a plan to a Markdown file → review it → switch to Sonnet for execution. You pay 2 req/msg only for planning, 1 req/msg for all the build work. Maximises output quality while preserving your request budget.
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ MAX MODE ══════════════ -->
+<div class="page" id="page-maxmode">
+<div class="w">
+  <div class="sh"><div class="title">Max Mode — Explained Honestly</div><div class="sub">The most misunderstood feature in Cursor. What it is, what it costs, and when not to use it.</div></div>
+
+  <div class="callout yellow">
+    <strong>What Max Mode actually is:</strong> Max Mode unlocks the model's full context window. Normal mode limits Cursor sessions to roughly 20,000 tokens for speed and cost. Max Mode expands this — up to 200K for Claude models, up to 1M for Gemini 2.5 Pro. It also enables longer reasoning chains on thinking models. <strong>Billing is context-based, not a flat 1 or 2 requests.</strong> Large contexts drain your budget unpredictably.
+  </div>
+
+  <div class="two-col" style="margin-top:20px">
+    <div class="surface-card" style="border-color:var(--red-border);background:var(--red-bg)">
+      <div class="sc-sub" style="color:var(--red)">✗ Do NOT use Max Mode for</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--red)">✗</span>Routine day-to-day coding — cost with no benefit</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--red)">✗</span>Tasks scoped to 1–3 files — you don't need 200K tokens</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--red)">✗</span>Every request by default — fastest way to drain budget</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--red)">✗</span>As a fix for poorly written prompts — fix the prompt first</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--red)">✗</span>Models that don't expand context in Max Mode — you pay the multiplier for nothing</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--red)">✗</span>Short debugging sessions on isolated functions</li>
+      </ul>
+    </div>
+    <div class="surface-card" style="border-color:var(--green-border);background:var(--green-bg)">
+      <div class="sc-sub" style="color:var(--green)">✓ Use Max Mode for</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--green)">✓</span>Large codebase refactors touching many interconnected files</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--green)">✓</span>Cross-cutting concerns spanning 5+ files</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--green)">✓</span>Gemini 2.5 Pro specifically — context jumps to 1M tokens</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--green)">✓</span>Deep bug hunting where the full call chain matters</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--green)">✓</span>Critical one-off architecture tasks where quality justifies cost</li>
+        <li style="font-size:13px;color:#555;padding-left:18px;position:relative;line-height:1.5"><span style="position:absolute;left:0;color:var(--green)">✓</span>When the task legitimately can't be scoped to fewer files</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout red" style="margin-top:16px">
+    <strong>Verified caveat:</strong> Cursor advertises 200K context in Max Mode for Claude models. Community reports consistently show 70K–120K usable in practice due to silent internal truncation for performance. Plan accordingly — Max Mode is not a guaranteed 200K window, and you'll be billed for the extended context regardless.
+  </div>
+
+  <div class="divider"></div>
+  <div class="sh"><div class="title">The Golden Rule</div></div>
+  <div class="callout green">
+    <strong>Right context beats more context — always.</strong> More context = slower response + higher Max Mode cost + degraded model attention on what actually matters. Instructions from early in a filled context window get progressively less likely to be followed. Ruthlessly include only what's relevant. Precision is a performance optimization.
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ CURSOR VS CLAUDE CODE ══════════════ -->
+<div class="page" id="page-vscc">
+<div class="w">
+  <div class="sh"><div class="title">Cursor vs Claude Code</div><div class="sub">Same Claude model, completely different experience — here's exactly why and when each wins</div></div>
+
+  <div class="callout blue" style="margin-bottom:28px">
+    <strong>The key insight:</strong> Running Claude Sonnet 4.6 in Cursor vs Claude Code is like running the same engine in two different vehicles. The model weights are identical — but the surrounding context management, token efficiency, tool access, and workflow philosophy are completely different. Independent benchmarks found <strong>Claude Code uses 5.5× fewer tokens than Cursor for identical tasks.</strong>
+  </div>
+
+  <div class="vs-grid" style="margin-bottom:24px">
+    <div class="vs-col cursor-col">
+      <div class="vs-head">🖥️ Cursor</div>
+      <div class="vs-sub">IDE-first · Visual · Interactive</div>
+    </div>
+    <div class="vs-divider-col">VS</div>
+    <div class="vs-col cc-col">
+      <div class="vs-head">⚡ Claude Code</div>
+      <div class="vs-sub">Agent-first · Terminal · Autonomous</div>
+    </div>
+  </div>
+
+  <div style="border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px">
+    <div style="display:grid;grid-template-columns:1fr 1fr">
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Context Window (real-world)</div>
+        <div class="vs-item-val">~70K–120K usable after internal truncation <span class="worse">Inconsistent</span></div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc;border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Context Window (real-world)</div>
+        <div class="vs-item-val">True 200K reliably. 1M beta on Opus 4.6 <span class="better">Reliable</span></div>
+      </div>
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Token Efficiency</div>
+        <div class="vs-item-val">More overhead per task — IDE layer adds context noise <span class="worse">5.5× more tokens</span></div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc;border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Token Efficiency</div>
+        <div class="vs-item-val">Lean, CLI-native context management <span class="better">5.5× fewer tokens</span></div>
+      </div>
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Model Access</div>
+        <div class="vs-item-val"><strong>Multi-model</strong> — Claude, GPT-5, Gemini, Composer 2 in one session <span class="better">Unique advantage</span></div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc;border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Model Access</div>
+        <div class="vs-item-val">Anthropic models only — deeper integration, subagent model selection <span class="same">Narrower choice</span></div>
+      </div>
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Tab Completions</div>
+        <div class="vs-item-val"><strong>Unmatched.</strong> Predicts next edits across multi-line blocks with AST-level context <span class="better">Cursor exclusive</span></div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc;border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Tab Completions</div>
+        <div class="vs-item-val">Not available in Claude Code <span class="worse">Not available</span></div>
+      </div>
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Subagents / Agent Teams</div>
+        <div class="vs-item-val">Limited agent orchestration <span class="worse">Basic</span></div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc;border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">Subagents / Agent Teams</div>
+        <div class="vs-item-val">Full subagent support + Agent Teams (Feb 2026) for parallel autonomous work <span class="better">Industry-leading</span></div>
+      </div>
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border);border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">CI/CD & Automation</div>
+        <div class="vs-item-val">Not suited for pipeline integration <span class="worse">IDE-only</span></div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc;border-bottom:1px solid var(--border)">
+        <div class="vs-item-label">CI/CD & Automation</div>
+        <div class="vs-item-val">Can run inside CI/CD pipelines. MCP for GitHub, Slack, Notion <span class="better">Native support</span></div>
+      </div>
+
+      <div style="padding:18px 20px;background:#f8fdf8;border-right:1px solid var(--border)">
+        <div class="vs-item-label">Best for</div>
+        <div class="vs-item-val"><strong>Interactive, visual day-to-day coding.</strong> Inline diffs, accept/reject per line, multi-model switching, tab completions, familiar VS Code interface.</div>
+      </div>
+      <div style="padding:18px 20px;background:#eef3fc">
+        <div class="vs-item-label">Best for</div>
+        <div class="vs-item-val"><strong>Autonomous, large-scale, agentic tasks.</strong> Multi-file refactors, large codebase analysis, CI/CD, overnight tasks, anything that needs true 200K context.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>The practical recommendation for most teams:</strong> Use Cursor Pro for daily interactive coding — tab completions, quick fixes, Q&A, multi-model switching. Add Claude Code when you need autonomous power — large refactors, CI/CD, overnight tasks, or when you need true 200K+ context without truncation. Many senior developers run both.
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sh"><div class="title">Same Model, Different Experience — Why?</div><div class="sub">Claude Sonnet 4.6 in Cursor vs Claude Sonnet 4.6 in Claude Code</div></div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+    <div class="surface-card">
+      <div class="sc-sub">Context Management</div>
+      <div class="sc-title">How context gets assembled</div>
+      <div class="sc-body" style="margin-top:8px">Cursor assembles context through IDE retrieval, file watchers, and its own preprocessing layer. Claude Code sends context directly, cleanly. <strong>Same model, different "what the model actually sees."</strong> Claude Code's context is leaner and more faithful to what you intend.</div>
+    </div>
+    <div class="surface-card">
+      <div class="sc-sub">Token Overhead</div>
+      <div class="sc-title">Cursor adds IDE-layer tokens</div>
+      <div class="sc-body" style="margin-top:8px">Cursor injects its own system instructions, file metadata, and retrieval scaffolding into every request. Claude Code's CLI-native approach is significantly leaner. <strong>This is why identical tasks use 5.5× more tokens in Cursor</strong> — the model isn't smarter in one, the context is just noisier.</div>
+    </div>
+    <div class="surface-card">
+      <div class="sc-sub">Feature Access</div>
+      <div class="sc-title">Deep Anthropic features vs broad model access</div>
+      <div class="sc-body" style="margin-top:8px">Claude Code has native access to extended thinking, subagents, Agent Teams, 1M context beta, and the full Claude tooling stack. Cursor gives you multi-model flexibility. <strong>If you primarily use Claude models, Claude Code extracts more from each model.</strong></div>
+    </div>
+    <div class="surface-card">
+      <div class="sc-sub">Workflow Philosophy</div>
+      <div class="sc-title">Interactive vs Autonomous</div>
+      <div class="sc-body" style="margin-top:8px">Cursor is built for developers who want to stay in control — see every diff, approve every change. Claude Code is built for developers who want to delegate — describe the outcome, come back to finished work. <strong>The model is the same. The trust model is different.</strong></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ CLAUDE SURFACES ══════════════ -->
+<div class="page" id="page-surfaces">
+<div class="w">
+  <div class="sh"><div class="title">The Claude Ecosystem — What Anthropic Offers</div><div class="sub">Six surfaces, one underlying model stack — each designed for a different context and workflow</div></div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:24px">
+
+    <div class="surface-card">
+      <div class="sc-icon">🌐</div>
+      <div class="sc-title">Claude.ai (Web / Mobile)</div>
+      <div class="sc-sub">Browser & mobile app</div>
+      <div class="sc-body">The classic chat interface. Browser-sandboxed — can't access your local files unless you upload them. Supports Projects for persistent context, memory, file attachments. <strong>Best for:</strong> Q&A, brainstorming, drafting, research, ad-hoc tasks, non-code work. Forget-by-default outside Projects.</div>
+      <div class="tag-list"><span class="tag blue">Q&A</span><span class="tag blue">Writing</span><span class="tag blue">Research</span><span class="tag blue">Light coding</span></div>
+    </div>
+
+    <div class="surface-card">
+      <div class="sc-icon">🖥️</div>
+      <div class="sc-title">Claude Desktop App</div>
+      <div class="sc-sub">macOS / Windows — required for Cowork</div>
+      <div class="sc-body">Looks like Claude.ai but acts as the operating system for Claude's advanced features. Required to run Cowork. Supports system-wide hotkeys (Alt+Space) to summon Claude instantly over any app. <strong>This is the hub for local file access and agent features.</strong> MCP connectors configured here carry over to Claude Code automatically.</div>
+      <div class="tag-list"><span class="tag green">Required for Cowork</span><span class="tag">System-wide hotkey</span><span class="tag">MCP hub</span></div>
+    </div>
+
+    <div class="surface-card" style="border-color:var(--orange-border)">
+      <div class="sc-icon">⚙️</div>
+      <div class="sc-title">Cowork</div>
+      <div class="sc-sub">Tab inside Claude Desktop · Knowledge work agent</div>
+      <div class="sc-body">Agentic — runs complex multi-step tasks, accesses your local files in a sandboxed VM, and can work while you do other things. <strong>Killer feature: you describe the outcome, step away, and come back to finished work.</strong> Supports scheduled tasks, sub-agent coordination, Excel/PowerPoint output, and app connectors. Not for code — that's Claude Code's job.</div>
+      <div class="tag-list"><span class="tag green">Autonomous</span><span class="tag green">Local files</span><span class="tag green">Scheduled tasks</span><span class="tag red">Not for coding</span></div>
+    </div>
+
+    <div class="surface-card" style="border-color:var(--blue-border)">
+      <div class="sc-icon">⚡</div>
+      <div class="sc-title">Claude Code (Terminal CLI)</div>
+      <div class="sc-sub">Terminal · Maximum power · Developer tool</div>
+      <div class="sc-body">Git-aware, codebase-native. Edits files, runs tests, commits. True 200K context. 1M beta on Opus 4.6. Full subagent + Agent Teams support. Runs in CI/CD. <strong>Most token-efficient way to use Claude on a codebase.</strong> Can run autonomous overnight tasks with loops. Requires terminal confidence.</div>
+      <div class="tag-list"><span class="tag blue">Autonomous coding</span><span class="tag blue">CI/CD</span><span class="tag blue">True 200K ctx</span><span class="tag blue">Agent Teams</span></div>
+    </div>
+
+    <div class="surface-card">
+      <div class="sc-icon">🔷</div>
+      <div class="sc-title">Claude Code (VS Code Extension)</div>
+      <div class="sc-sub">Same power, visual interface</div>
+      <div class="sc-body">Claude Code in the IDE — brings the same models, subagents, and MCP tools into a sidebar with visual diffs and accept/reject buttons. <strong>Best of both worlds for developers who don't want to live in the terminal.</strong> Works in Cursor too. Inline diffs, plan mode, extended thinking toggle. No tab completions (that's Cursor's thing).</div>
+      <div class="tag-list"><span class="tag">Visual diffs</span><span class="tag">Plan mode</span><span class="tag">Subagents</span><span class="tag">Works in Cursor</span></div>
+    </div>
+
+    <div class="surface-card">
+      <div class="sc-icon">📱</div>
+      <div class="sc-title">Claude Dispatch (Mobile)</div>
+      <div class="sc-sub">iOS / Android · March 2026</div>
+      <div class="sc-body">Send tasks to Cowork running on your desktop from your phone. Your desktop executes them locally, you come back to finished work. <strong>~50% success rate on complex tasks currently.</strong> Works for simpler, well-defined tasks reliably. Requires Claude Desktop + Cowork to be running on your machine.</div>
+      <div class="tag-list"><span class="tag">Remote task delegation</span><span class="tag red">~50% reliability</span><span class="tag">Simple tasks best</span></div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+  <div class="sh"><div class="title">When to Use What</div><div class="sub">Decision guide for the right surface</div></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>If you want to...</th><th>Use this</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Draft an email, do research, brainstorm</td><td><span class="cbadge cmid">Claude.ai Web</span></td><td style="font-size:12px;color:#555">Conversational, no setup, works anywhere</td></tr>
+        <tr><td>Process a folder of files, organise PDFs, generate a report</td><td><span class="cbadge cmid">Cowork (Desktop)</span></td><td style="font-size:12px;color:#555">Local file access, sandboxed, autonomous. No terminal needed.</td></tr>
+        <tr><td>Code with full AI integration, tab completions, multi-model switching</td><td><span class="cbadge cmid">Cursor</span></td><td style="font-size:12px;color:#555">Best interactive IDE experience. Tab completions are exclusive.</td></tr>
+        <tr><td>Large codebase refactors, autonomous multi-file tasks, CI/CD</td><td><span class="cbadge chigh">Claude Code CLI</span></td><td style="font-size:12px;color:#555">True 200K context, Agent Teams, 5.5× more token-efficient</td></tr>
+        <tr><td>Same power as Claude Code CLI but with visual diffs</td><td><span class="cbadge clow">Claude Code VS Code Ext.</span></td><td style="font-size:12px;color:#555">IDE comfort with agent power. Works inside Cursor too.</td></tr>
+        <tr><td>Delegate tasks to your desktop while mobile</td><td><span class="cbadge clow">Claude Dispatch</span></td><td style="font-size:12px;color:#555">Requires Cowork + Desktop running. Best for simple tasks.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ SUBAGENTS & SKILLS ══════════════ -->
+<div class="page" id="page-agents">
+<div class="w">
+  <div class="sh"><div class="title">Subagents, Skills & Agent Teams</div><div class="sub">Claude Code's most powerful — and most underused — features. This is where the real speed multiplier lives.</div></div>
+
+  <div class="callout blue" style="margin-bottom:28px">
+    <strong>The core problem they solve:</strong> Long sessions accumulate context noise. Every file read, search result, and intermediate reasoning step bloats your main conversation — making subsequent messages slower and more expensive. Subagents and Skills solve this by isolating work into separate contexts that discard when done. <strong>Your main session stays clean. The heavy lifting happens in the background.</strong>
+  </div>
+
+  <!-- FOUR CONCEPTS -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:32px">
+
+    <div class="agent-card">
+      <div class="ac-header">
+        <div class="ac-icon blue">📄</div>
+        <div><div class="ac-title">CLAUDE.md</div><div class="ac-meta">Always-on context · Session start</div></div>
+      </div>
+      <div class="ac-body">A Markdown file at your project root that Claude reads at the start of every session. <strong>Whatever you put here, Claude just knows.</strong> No prompting required. Best for: coding conventions, commit message format, architecture rules, preferred libraries. If a rule applies to every task — put it here.</div>
+      <div class="ac-example"><div class="label">Example</div>Always use TypeScript strict mode.<br>Never modify files in src/legacy/.<br>Commit messages: feat: / fix: / chore: prefix.<br>Stack: Next.js 14, Supabase, Tailwind.</div>
+    </div>
+
+    <div class="agent-card">
+      <div class="ac-header">
+        <div class="ac-icon purple">🔧</div>
+        <div><div class="ac-title">Skills</div><div class="ac-meta">On-demand context · Auto-invoked</div></div>
+      </div>
+      <div class="ac-body">Reusable instruction sets stored as <span class="chip">SKILL.md</span> files in <span class="chip">.claude/skills/</span>. Claude scans skill descriptions at startup — when your request matches a skill's description, it loads the full instructions. <strong>Think of them as macros.</strong> Write a PR review checklist once, invoke it with <span class="chip">/review-pr</span> forever. Skills are portable — the same SKILL.md format works across Cursor, Gemini CLI, and Codex CLI too.</div>
+      <div class="ac-example"><div class="label">Example skill</div>name: review-pr<br>description: Review a PR for security, bugs, style<br>---<br>[Detailed 20-step review checklist]<br><br>Invoke: /review-pr</div>
+    </div>
+
+    <div class="agent-card">
+      <div class="ac-header">
+        <div class="ac-icon green">⚡</div>
+        <div><div class="ac-title">Subagents</div><div class="ac-meta">Isolated workers · Parallel execution</div></div>
+      </div>
+      <div class="ac-body">Specialized Claude instances with their own isolated context window, system prompt, and tool permissions. You delegate a task to a subagent — it does the work independently, then returns only the result. <strong>The intermediate reasoning, dead ends, and file reads get discarded.</strong> Your main session never sees the noise. Can run concurrently — multiple subagents working in parallel.</div>
+      <div class="ac-example"><div class="label">Example</div>Main Claude → spawns:<br>• code-reviewer subagent (read-only tools)<br>• doc-fetcher subagent (web search only)<br>• test-writer subagent<br><br>All run in parallel. Results return clean.</div>
+    </div>
+
+    <div class="agent-card">
+      <div class="ac-header">
+        <div class="ac-icon orange">🤝</div>
+        <div><div class="ac-title">Agent Teams</div><div class="ac-meta">February 2026 · Collaborative agents</div></div>
+      </div>
+      <div class="ac-body">Multiple Claude instances that can <strong>talk to each other directly</strong> and self-assign tasks from a shared list. Unlike subagents (which report to a boss), teammates coordinate mid-task. Best for: one agent writing tests while another refactors the module under test. Anthropic demoed 16 agents building a 100K-line compiler over 2 weeks. <strong>Use only when workers genuinely need to coordinate — token usage is significantly higher.</strong></div>
+      <div class="ac-example"><div class="label">When to use vs subagents</div>Independent tasks → Subagents<br>Tasks that need mid-work coordination → Agent Teams<br><br>Cost: Agent Teams consume significantly more tokens. Reserve for genuinely parallel complex work.</div>
+    </div>
+
+  </div>
+
+  <!-- HOW SUBAGENTS PROTECT CONTEXT -->
+  <div class="sh"><div class="title">Why Subagents Make Everything Faster</div><div class="sub">The mechanics of context isolation — and why it matters</div></div>
+
+  <div class="flow" style="margin-bottom:20px">
+    <div class="flow-step"><div class="flow-step-n">Without subagents</div><div class="flow-step-t">Main session reads 50 files</div><div class="flow-step-b">All file contents pile into your main context. Every subsequent message gets slower and more expensive. Context fills. Quality degrades.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-n">With subagents</div><div class="flow-step-t">Subagent reads 50 files</div><div class="flow-step-b">Runs in its own isolated context. Returns a clean summary. Main context stays focused and lean.</div></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><div class="flow-step-n">Result</div><div class="flow-step-t">Main session only sees the answer</div><div class="flow-step-b">All intermediate work, dead ends, and file noise is discarded. You still pay for the subagent's tokens — but they don't compound into your main session.</div></div>
+  </div>
+
+  <div class="callout green" style="margin-bottom:24px">
+    <strong>Real-world pattern that works:</strong> During Plan mode, Claude Code automatically spawns an Explore-type subagent to scan the repo and return a distilled map of relevant files. Your main conversation gets just the map — not 50 file reads. This is why Claude Code sessions stay coherent on large codebases far longer than Cursor sessions doing the same work.
+  </div>
+
+  <!-- SKILLS VS SUBAGENTS QUICK REF -->
+  <div class="sh"><div class="title">Skills vs Subagents vs CLAUDE.md — Quick Reference</div></div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Feature</th><th>CLAUDE.md</th><th>Skills</th><th>Subagents</th><th>Agent Teams</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600;font-size:13px">What it is</td>
+          <td style="font-size:12px;color:#555">Always-on project rules</td>
+          <td style="font-size:12px;color:#555">Reusable slash-command workflows</td>
+          <td style="font-size:12px;color:#555">Isolated specialist agents</td>
+          <td style="font-size:12px;color:#555">Collaborative parallel agents</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:13px">When loaded</td>
+          <td style="font-size:12px;color:#555">Every session, automatically</td>
+          <td style="font-size:12px;color:#555">Auto-matched by description, or /invoke</td>
+          <td style="font-size:12px;color:#555">On explicit delegation or auto-routing</td>
+          <td style="font-size:12px;color:#555">When you explicitly spin up a team</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:13px">Context isolation</td>
+          <td style="font-size:12px;color:#555">No — it's in main context</td>
+          <td style="font-size:12px;color:#555">Partial — instructions in main context</td>
+          <td style="font-size:12px;color:#555">Full — own isolated context window</td>
+          <td style="font-size:12px;color:#555">Full — each agent has its own context</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:13px">Best for</td>
+          <td style="font-size:12px;color:#555">Rules that apply to every task</td>
+          <td style="font-size:12px;color:#555">Repeatable workflows (PR review, deploy checklist)</td>
+          <td style="font-size:12px;color:#555">Research, file reading, parallel tasks</td>
+          <td style="font-size:12px;color:#555">Large tasks needing mid-work coordination</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600;font-size:13px">Portability</td>
+          <td style="font-size:12px;color:#555">Claude Code + Cursor (as AGENTS.md)</td>
+          <td style="font-size:12px;color:#555">Cross-tool — works in Cursor, Gemini CLI, Codex</td>
+          <td style="font-size:12px;color:#555">Claude Code / Claude Agent SDK only</td>
+          <td style="font-size:12px;color:#555">Claude Code / Opus 4.6 only</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout yellow" style="margin-top:20px">
+    <strong>Practical starting point for your team:</strong> Start with CLAUDE.md (5 minutes to write, immediate impact). Then add a /review-pr skill for code review. Once comfortable, explore subagents for large repo analysis tasks. Agent Teams are powerful but high-token — evaluate on a case-by-case basis for genuinely parallel large tasks.
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <span>AI Dev Toolkit · Team Guide · March 2026</span>
+  <span>Enterprise plan: <em>500 req/month</em> · Normal=1req · Thinking=2req · Max Mode=variable</span>
+</footer>
+
+<script>
+function go(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Tips filter
+const tips=document.querySelectorAll('.tip');
+const pills=document.querySelectorAll('[data-f]');
+const inp=document.getElementById('search');
+const empty=document.getElementById('tempty');
+let af='all',st='';
+
+function upd(){
+  let n=0;
+  tips.forEach(t=>{
+    const c=t.dataset.c;
+    const txt=t.textContent.toLowerCase();
+    const fm=af==='all'||c===af;
+    const sm=!st||txt.includes(st.toLowerCase());
+    if(fm&&sm){t.classList.remove('hidden');n++;}
+    else t.classList.add('hidden');
+  });
+  empty.classList.toggle('show',n===0);
+}
+
+pills.forEach(p=>p.addEventListener('click',()=>{
+  pills.forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');
+  af=p.dataset.f;upd();
+}));
+inp&&inp.addEventListener('input',e=>{st=e.target.value.trim();upd();});
+</script>
+</body>
+</html>
